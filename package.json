@@ -1,5 +1,5 @@
 {
-  "name": "atcoder-diff-submissions.user.js",
+  "name": "atcoder-diff-submissions",
   "version": "1.0.0",
   "description": "AtCoderの提出一覧から、選択した2つの提出間の差分を表示します。",
   "scripts": {
