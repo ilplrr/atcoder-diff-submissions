@@ -35,7 +35,7 @@ function popupDiff(submissionsCodes) {
     topDiv.classList.add('popup-modal-show');
 
     const keys = Object.keys(submissionsCodes);
-    const len = submissionsCodes.map(e => e.split('\n').length).sort()[1];
+    const len = keys.map(k => submissionsCodes[k].split('\n').length).sort()[1];
     const diff = createTwoFilesPatch(keys[0], keys[1], submissionsCodes[keys[0]], submissionsCodes[keys[1]], undefined, undefined, { context: len });
     const config = {
         outputFormat: 'side-by-side',
@@ -55,9 +55,17 @@ function diffBtnListener(e) {
     });
 
     const promises = submissionsUrls.sort().map(url => getSubmissionCode(url));
-    Promise.all(promises).then(obj =>
-        popupDiff(obj)
-    );
+    Promise.all(promises).then(objs => {
+        const obj = {};
+        objs.forEach(e => {
+            const key = Object.keys(e)[0];
+            const m = key.match(/(?<=\/)\d+(?=$)/);
+            if (!m) return;
+            const submissionId = m.toString();
+            obj['#' + submissionId] = e[key];
+        });
+        popupDiff(obj);
+    });
 }
 
 // 提出コードの取得
@@ -70,7 +78,7 @@ function getSubmissionHTML(url) {
 async function getSubmissionCode(url) {
     const dom = await getSubmissionHTML(url);
     const elm = dom.querySelector('#submission-code');
-    return elm.innerText;
+    return { [url]: elm.innerText };
 }
 
 // チェックボックスの追加

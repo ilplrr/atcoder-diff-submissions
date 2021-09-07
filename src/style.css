@@ -34,3 +34,14 @@
     margin: 5px, 0px;
     background-color: white;
 }
+
+.d2h-file-header {
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+}
+
+.d2h-files-diff {
+    position: relative;
+    top: 35px;
+}
