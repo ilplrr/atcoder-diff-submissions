@@ -1,4 +1,7 @@
-import "./style.js"
+import { createTwoFilesPatch } from 'diff';
+import { html as diffHtml } from 'diff2html';
+import 'diff2html/bundles/css/diff2html.min.css'
+import "./style.css";
 
 // モーダル要素作成
 function createModalPopup() {
@@ -8,13 +11,20 @@ function createModalPopup() {
     document.body.appendChild(topDiv);
 
     const closeBtn = document.createElement('input');
+    closeBtn.id = 'popup-close-btn';
     closeBtn.type = 'button';
     closeBtn.value = '閉じる';
     closeBtn.addEventListener('click', (e) => {
-
         topDiv.classList.remove('popup-modal-show');
     });
-    topDiv.appendChild(closeBtn);
+    const popupHeader = document.createElement('div');
+    popupHeader.classList.add('popup-header')
+    popupHeader.appendChild(closeBtn);
+    topDiv.appendChild(popupHeader);
+
+    const div = document.createElement('div');
+    div.id = 'diff-disp-div';
+    topDiv.appendChild(div);
 }
 
 createModalPopup();
@@ -23,6 +33,17 @@ createModalPopup();
 function popupDiff(submissionsCodes) {
     const topDiv = document.getElementById('diff-container');
     topDiv.classList.add('popup-modal-show');
+
+    const keys = Object.keys(submissionsCodes);
+    const len = submissionsCodes.map(e => e.split('\n').length).sort()[1];
+    const diff = createTwoFilesPatch(keys[0], keys[1], submissionsCodes[keys[0]], submissionsCodes[keys[1]], undefined, undefined, { context: len });
+    const config = {
+        outputFormat: 'side-by-side',
+        drawFileList: false,
+
+    };
+    const html = diffHtml(diff, config);
+    document.querySelector('#diff-disp-div').innerHTML = html;
 }
 
 function diffBtnListener(e) {
@@ -32,8 +53,24 @@ function diffBtnListener(e) {
         const a = cb.parentNode.parentNode.lastElementChild.firstElementChild;
         submissionsUrls.push(a.href);
     });
-    const submissionsCodes = submissionsUrls.map(url => getSubmissionCode(url));
-    popupDiff(submissionsCodes);
+
+    const promises = submissionsUrls.sort().map(url => getSubmissionCode(url));
+    Promise.all(promises).then(obj =>
+        popupDiff(obj)
+    );
+}
+
+// 提出コードの取得
+function getSubmissionHTML(url) {
+    return fetch(url)
+        .then(response => response.text())
+        .then(text => new DOMParser().parseFromString(text, 'text/html'))
+}
+
+async function getSubmissionCode(url) {
+    const dom = await getSubmissionHTML(url);
+    const elm = dom.querySelector('#submission-code');
+    return elm.innerText;
 }
 
 // チェックボックスの追加
@@ -60,6 +97,11 @@ function checkboxListener(e) {
     }
 }
 
+function checkboxParentListener(e) {
+    const elm = e.target.firstElementChild;
+    if (elm) elm.click();
+}
+
 function insertCheckBox() {
     const table = document.querySelector('table');
 
@@ -77,27 +119,14 @@ function insertCheckBox() {
         const cb = document.createElement('input');
         cb.type = 'checkbox';
         cb.classList.add('diff-checkbox');
-        cb.addEventListener('change', checkboxListener);
+        cb.addEventListener('change', checkboxListener); // checkbox の当たりが判定小さいので……。
         checkboxes.push(cb);
         const td = document.createElement('td');
         td.appendChild(cb);
         td.style.textAlign = 'center';
+        td.addEventListener('click', checkboxParentListener);
         insertOnTrTop(tr, td);
     });
 }
 
 insertCheckBox();
-
-// 提出コードの取得
-function getSubmissionHTML(url) {
-    return fetch(url)
-        .then(response => response.text())
-        .then(text => new DOMParser().parseFromString(text, 'text/html'))
-}
-
-async function getSubmissionCode(url) {
-    const dom = await getSubmissionHTML(url);
-    const elm = dom.querySelector('#submission-code');
-    return elm.innerText;
-}
-

@@ -1,4 +1,6 @@
 import packageJson from "./package.json";
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 
 const userScriptBanner = `
 // ==UserScript==
@@ -18,6 +20,17 @@ export default {
   output: {
     banner: userScriptBanner,
     file: 'bundle.js',
-    format: 'iife'
-  }
+    format: 'iife',
+  },
+  plugins: [
+    resolve({
+      jsnext: true
+    }),
+    commonjs({
+      dynamicRequireTargets: [
+        // include using a glob pattern (either a string or an array of strings)
+        'node_modules/diff2html/**'
+      ]
+    }),
+  ]
 };

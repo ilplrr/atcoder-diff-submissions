@@ -1,0 +1,36 @@
+.popup-modal {
+    position: fixed;
+    z-index: 998;
+    left: 0;
+    bottom: 0;
+    max-height: 90%;
+    width: 100%;
+    background-color: gray;
+    visibility: hidden;
+    overflow: auto;
+    border-top: solid thin;
+}
+
+.popup-modal-show {
+    visibility: visible;
+}
+
+.popup-header {
+    position: fixed;
+    z-index: 1007;
+    width: 100%;
+    padding: 5px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+#popup-close-btn {
+    background-color: #c00;
+    color: white;
+    border: none;
+}
+
+#diff-disp-div {
+    margin: 5px, 0px;
+    background-color: white;
+}
