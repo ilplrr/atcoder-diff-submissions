@@ -7,6 +7,10 @@
     "build": "webpack"
   },
   "author": "ilplrr",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ilplrr/atcoder-diff-submissions.git"
+  },
   "license": "MIT",
   "dependencies": {
     "diff2html": "^3.4.11",
