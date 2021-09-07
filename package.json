@@ -4,7 +4,6 @@
   "description": "AtCoderの提出一覧から、選択した2つの提出間の差分を表示します。",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "bundle": "rollup -c",
     "build": "webpack"
   },
   "author": "ilplrr",
@@ -14,10 +13,7 @@
     "jsdiff": "^1.1.1"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^20.0.0",
-    "@rollup/plugin-node-resolve": "^13.0.4",
     "css-loader": "^6.2.0",
-    "rollup": "^2.56.3",
     "style-loader": "^3.2.1",
     "webpack": "^5.52.0",
     "webpack-cli": "^4.8.0"
