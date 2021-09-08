@@ -83,16 +83,16 @@ async function getSubmissionCode(url) {
 
 // チェックボックスの追加
 const checkboxes = [];
-let checked_cnt = 0;
+let checkedCnt = 0;
 
 function insertOnTrTop(parent, newNode) {
     parent.insertBefore(newNode, parent.firstElementChild);
 }
 
 function checkboxListener(e) {
-    checked_cnt += e.target.checked ? 1 : -1;
+    checkedCnt += e.target.checked ? 1 : -1;
     const btn = document.getElementById('diff-btn');
-    if (checked_cnt >= 2) {
+    if (checkedCnt >= 2) {
         btn.disabled = false;
         checkboxes.forEach(cb => {
             cb.disabled = !cb.checked;
