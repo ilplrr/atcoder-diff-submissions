@@ -34,7 +34,7 @@ function popupDiff(submissionsCodes) {
     const topDiv = document.getElementById('diff-container');
     topDiv.classList.add('popup-modal-show');
 
-    const keys = Object.keys(submissionsCodes);
+    const keys = Object.keys(submissionsCodes).sort();
     const len = keys.map(k => submissionsCodes[k].split('\n').length).sort()[1];
     const diff = createTwoFilesPatch(keys[0], keys[1], submissionsCodes[keys[0]], submissionsCodes[keys[1]], undefined, undefined, { context: len });
     const config = {
@@ -54,7 +54,7 @@ function diffBtnListener(e) {
         submissionsUrls.push(a.href);
     });
 
-    const promises = submissionsUrls.sort().map(url => getSubmissionCode(url));
+    const promises = submissionsUrls.map(url => getSubmissionCode(url));
     Promise.all(promises).then(objs => {
         const obj = {};
         objs.forEach(e => {
