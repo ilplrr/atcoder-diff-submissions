@@ -10,8 +10,10 @@ const userScriptBanner = `
 // @description  ${packageJson.description}
 // @author       ${packageJson.author}
 // @license      ${packageJson.license}
-// @match        https://atcoder.jp/contests/*/submissions*
-// @match        https://atcoder.jp/contests/*/submissions/me*
+// @match        https://atcoder.jp/contests/*/submissions
+// @match        https://atcoder.jp/contests/*/submissions?*
+// @match        https://atcoder.jp/contests/*/submissions/me
+// @match        https://atcoder.jp/contests/*/submissions/me?*
 // @grant        none
 // ==/UserScript==`.trim();
 
