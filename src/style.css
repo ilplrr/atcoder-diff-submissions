@@ -4,6 +4,7 @@
     left: 0;
     bottom: 0;
     max-height: 90%;
+    min-height: 50%;
     width: 100%;
     background-color: white;
     visibility: hidden;
@@ -31,7 +32,7 @@
 }
 
 #diff-disp-div {
-    margin: 5px, 0px;
+    padding-bottom: 1em;
     background-color: white;
 }
 
