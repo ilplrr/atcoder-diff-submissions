@@ -35,6 +35,10 @@
     background-color: white;
 }
 
+.d2h-file-wrapper {
+    border: none;
+}
+
 .d2h-file-header {
     position: fixed;
     width: 100%;
