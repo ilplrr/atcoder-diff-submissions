@@ -85,10 +85,6 @@ async function getSubmissionCode(url) {
 const checkboxes = [];
 let checkedCnt = 0;
 
-function insertOnTrTop(parent, newNode) {
-    parent.insertBefore(newNode, parent.firstElementChild);
-}
-
 function checkboxListener(e) {
     checkedCnt += e.target.checked ? 1 : -1;
     const btn = document.getElementById('diff-btn');
@@ -113,6 +109,10 @@ function checkboxParentListener(e) {
 function insertCheckBox() {
     const table = document.querySelector('table');
 
+    const insertCb = (parent, newNode) => {
+        parent.insertBefore(newNode, parent.firstElementChild);
+    }
+
     const btn = document.createElement('input');
     btn.type = 'button';
     btn.value = '比較';
@@ -121,19 +121,19 @@ function insertCheckBox() {
     btn.addEventListener('click', diffBtnListener);
     const th = document.createElement('th');
     th.appendChild(btn);
-    insertOnTrTop(table.querySelector('thead>tr'), th);
+    insertCb(table.querySelector('thead>tr'), th);
 
     table.querySelectorAll('tbody>tr').forEach(tr => {
         const cb = document.createElement('input');
         cb.type = 'checkbox';
         cb.classList.add('diff-checkbox');
-        cb.addEventListener('change', checkboxListener); // checkbox の当たりが判定小さいので……。
+        cb.addEventListener('change', checkboxListener);
         checkboxes.push(cb);
         const td = document.createElement('td');
         td.appendChild(cb);
         td.style.textAlign = 'center';
-        td.addEventListener('click', checkboxParentListener);
-        insertOnTrTop(tr, td);
+        td.addEventListener('click', checkboxParentListener); // checkbox の当たりが判定小さいので……。
+        insertCb(tr, td);
     });
 }
 
