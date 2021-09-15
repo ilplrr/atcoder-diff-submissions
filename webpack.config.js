@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const packageJson = require('./package.json');
+const fs = require('fs');
 
 const userScriptBanner = `
 // ==UserScript==
@@ -16,6 +17,8 @@ const userScriptBanner = `
 // @match        https://atcoder.jp/contests/*/submissions/me?*
 // @grant        none
 // ==/UserScript==`.trim();
+
+const licensesBanner = fs.readFileSync(path.resolve(__dirname, 'dist/licenses-banner.txt'));
 
 module.exports = {
   mode: 'production',
@@ -40,7 +43,7 @@ module.exports = {
   },
   plugins: [
     new webpack.BannerPlugin({
-      banner: userScriptBanner,
+      banner: [userScriptBanner, licensesBanner].join('\n\n'),
       raw: true
     })
   ],

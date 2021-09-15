@@ -4,7 +4,7 @@
   "description": "AtCoderの提出一覧から、選択した2つの提出間の差分を表示します。",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "build": "node util/gen-license-banner.js && webpack"
   },
   "author": "ilplrr",
   "repository": {
