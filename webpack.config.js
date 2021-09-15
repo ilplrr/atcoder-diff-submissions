@@ -6,7 +6,7 @@ const fs = require('fs');
 const userScriptBanner = `
 // ==UserScript==
 // @name         ${packageJson.name}
-// @namespace    xxx
+// @namespace    https://github.com/${packageJson.author}
 // @version      ${packageJson.version}
 // @description  ${packageJson.description}
 // @author       ${packageJson.author}
