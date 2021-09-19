@@ -15,6 +15,8 @@ const userScriptBanner = `
 // @match        https://atcoder.jp/contests/*/submissions?*
 // @match        https://atcoder.jp/contests/*/submissions/me
 // @match        https://atcoder.jp/contests/*/submissions/me?*
+// @supportURL   https://github.com/${packageJson.author}/${packageJson.name}/issues
+// @updateURL    https://github.com/${packageJson.author}/${packageJson.name}/raw/master/dist/bundle.user.js
 // @grant        none
 // ==/UserScript==`.trim();
 

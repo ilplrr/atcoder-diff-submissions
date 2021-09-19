@@ -9,6 +9,8 @@
 // @match        https://atcoder.jp/contests/*/submissions?*
 // @match        https://atcoder.jp/contests/*/submissions/me
 // @match        https://atcoder.jp/contests/*/submissions/me?*
+// @supportURL   https://github.com/ilplrr/atcoder-diff-submissions/issues
+// @updateURL    https://github.com/ilplrr/atcoder-diff-submissions/raw/master/dist/bundle.user.js
 // @grant        none
 // ==/UserScript==
 
