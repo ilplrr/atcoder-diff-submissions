@@ -1,49 +1,58 @@
 import { createTwoFilesPatch } from 'diff';
 import { html as diffHtml } from 'diff2html';
 import 'diff2html/bundles/css/diff2html.min.css'
-import "./style.css";
 
 // モーダル要素作成
-function createModalPopup() {
-    const topDiv = document.createElement('div');
-    topDiv.id = 'diff-container';
-    topDiv.classList.add('popup-modal');
-    document.body.appendChild(topDiv);
-
-    const closeBtn = document.createElement('input');
-    closeBtn.id = 'popup-close-btn';
-    closeBtn.type = 'button';
-    closeBtn.value = '閉じる';
-    closeBtn.addEventListener('click', (e) => {
-        topDiv.classList.remove('popup-modal-show');
-    });
-    const popupHeader = document.createElement('div');
-    popupHeader.classList.add('popup-header')
-    popupHeader.appendChild(closeBtn);
-    topDiv.appendChild(popupHeader);
-
-    const div = document.createElement('div');
-    div.id = 'diff-disp-div';
-    topDiv.appendChild(div);
+function createDiffModal() {
+    const modal = document.createElement('div');
+    modal.id = 'diff-result-modal';
+    modal.classList.add('modal');
+    modal.tabIndex = '-1';
+    modal.innerHTML = `
+<div class="modal-dialog" role="document" style="width: 97%;">
+  <div class="modal-content">
+    <div class="modal-header" style="display: flex;"></div>
+    <div class="modal-body"></div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+</div>`;
+    document.body.appendChild(modal);
 }
-
-createModalPopup();
+createDiffModal();
 
 // モーダル表示
-function popupDiff(submissionsCodes) {
-    const topDiv = document.getElementById('diff-container');
-    topDiv.classList.add('popup-modal-show');
-
+function showDiffModal(submissionsCodes) {
     const keys = Object.keys(submissionsCodes).sort();
     const len = keys.map(k => submissionsCodes[k].split('\n').length).sort()[1];
     const diff = createTwoFilesPatch(keys[0], keys[1], submissionsCodes[keys[0]], submissionsCodes[keys[1]], undefined, undefined, { context: len });
     const config = {
         outputFormat: 'side-by-side',
         drawFileList: false,
-
     };
     const html = diffHtml(diff, config);
-    document.querySelector('#diff-disp-div').innerHTML = html;
+    const dom = new DOMParser().parseFromString(html, 'text/html');
+
+    const modalHeader = document.querySelector('#diff-result-modal .modal-header');
+    modalHeader.innerHTML = dom.querySelector('.d2h-file-header').innerHTML;
+
+    const btn = document.createElement('button');
+    btn.className = 'close';
+    btn.dataset.dismiss = 'modal';
+    btn.ariaLabel = 'Close';
+    btn.innerHTML = '<span aria-hidden="true">&times;</span>';
+    modalHeader.appendChild(btn);
+
+    const modalBody = document.querySelector('#diff-result-modal .modal-body')
+    modalBody.innerHTML = dom.querySelector('.d2h-files-diff').innerHTML;
+
+    const syncHorizontalScroll = (elm1,elm2) => {
+        elm1.addEventListener('scroll', (e) => elm2.scrollLeft = elm1.scrollLeft);
+    };
+    const sides = modalBody.querySelectorAll('.d2h-file-side-diff');
+    syncHorizontalScroll(sides[0], sides[1]);
+    syncHorizontalScroll(sides[1], sides[0]);
 }
 
 function diffBtnListener(e) {
@@ -64,7 +73,7 @@ function diffBtnListener(e) {
             const submissionId = m.toString();
             obj['#' + submissionId] = e[key];
         });
-        popupDiff(obj);
+        showDiffModal(obj);
     });
 }
 
@@ -87,7 +96,7 @@ let checkedCnt = 0;
 
 function checkboxListener(e) {
     checkedCnt += e.target.checked ? 1 : -1;
-    const btn = document.getElementById('diff-btn');
+    const btn = document.getElementById('show-diff-result-btn');
     if (checkedCnt >= 2) {
         btn.disabled = false;
         checkboxes.forEach(cb => {
@@ -116,8 +125,10 @@ function insertCheckBox() {
     const btn = document.createElement('input');
     btn.type = 'button';
     btn.value = '比較';
-    btn.id = 'diff-btn';
+    btn.id = 'show-diff-result-btn';
     btn.disabled = true;
+    btn.dataset.toggle = 'modal';
+    btn.dataset.target = '#diff-result-modal';
     btn.addEventListener('click', diffBtnListener);
     const th = document.createElement('th');
     th.appendChild(btn);
@@ -136,5 +147,4 @@ function insertCheckBox() {
         insertCb(tr, td);
     });
 }
-
 insertCheckBox();
